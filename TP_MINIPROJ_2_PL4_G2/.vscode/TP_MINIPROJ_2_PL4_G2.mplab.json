@@ -4,7 +4,7 @@
         {
             "name": "default",
             "id": "conf1",
-            "device": "PIC18F45K22",
+            "device": "PIC18F46K22",
             "imagePath": "./out/TP_MINIPROJ_2_PL4_G2/default.elf",
             "packs": [
                 {

@@ -6,9 +6,9 @@
  * NOME: Bruno Fernandes dos Santos
  * NUMERO: 2024114032
  *
- // todo: UPDATE WITH REAL DETAILS 
+ * TODO: FILL OUT WITH REAL DETAILS
  * NOME: Diogo Oliveira
- * NUMERO: 
+ * NUMERO: ---
  */
 int main(){
 

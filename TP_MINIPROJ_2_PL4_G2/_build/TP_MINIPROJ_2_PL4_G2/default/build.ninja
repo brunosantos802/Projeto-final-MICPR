@@ -45,9 +45,9 @@ cmake_ninja_workdir = /home/bruno/Documents/IPLEIRIA/IPLeiria$ 2026-27/MPROC/PL/
 build cmake_object_order_depends_target_TP_MINIPROJ_2_PL4_G2_default_default_XC8_compile: phony || .
 
 build CMakeFiles/TP_MINIPROJ_2_PL4_G2_default_default_XC8_compile.dir/home/bruno/Documents/IPLEIRIA/IPLeiria_2026-27/MPROC/PL/Projeto_Final/Projeto-final-MICPR/TP_MINIPROJ_2_PL4_G2/main.c.p1: C_COMPILER__TP_MINIPROJ_2_PL4_G2_default_default_XC8_compile_unscanned_ /home/bruno/Documents/IPLEIRIA/IPLeiria$ 2026-27/MPROC/PL/Projeto$ Final/Projeto-final-MICPR/TP_MINIPROJ_2_PL4_G2/main.c || cmake_object_order_depends_target_TP_MINIPROJ_2_PL4_G2_default_default_XC8_compile
-  DEFINES = -DXPRJ_default=default -D__18F45K22__ -D__DEBUG=1
+  DEFINES = -DXPRJ_default=default -D__18F46K22__ -D__DEBUG=1
   DEP_FILE = CMakeFiles/TP_MINIPROJ_2_PL4_G2_default_default_XC8_compile.dir/home/bruno/Documents/IPLEIRIA/IPLeiria_2026-27/MPROC/PL/Projeto_Final/Projeto-final-MICPR/TP_MINIPROJ_2_PL4_G2/main.c.p1.d
-  FLAGS = -c -mcpu=18F45K22 -mdfp=/home/bruno/.mchp_packs/Microchip/PIC18F-K_DFP/1.17.312/xc8 -fno-short-double -fno-short-float -memi=wordwrite -O0 -maddrqual=ignore -mwarn=-3 -msummary=-psect,-class,+mem,-hex,-file -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto
+  FLAGS = -c -mcpu=18F46K22 -mdfp=/home/bruno/.mchp_packs/Microchip/PIC18F-K_DFP/1.17.312/xc8 -fno-short-double -fno-short-float -memi=wordwrite -O0 -maddrqual=ignore -mwarn=-3 -msummary=-psect,-class,+mem,-hex,-file -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto
   OBJECT_DIR = CMakeFiles/TP_MINIPROJ_2_PL4_G2_default_default_XC8_compile.dir
   OBJECT_FILE_DIR = CMakeFiles/TP_MINIPROJ_2_PL4_G2_default_default_XC8_compile.dir/home/bruno/Documents/IPLEIRIA/IPLeiria_2026-27/MPROC/PL/Projeto_Final/Projeto-final-MICPR/TP_MINIPROJ_2_PL4_G2
   TARGET_COMPILE_PDB = CMakeFiles/TP_MINIPROJ_2_PL4_G2_default_default_XC8_compile.dir/
@@ -79,7 +79,7 @@ build cmake_object_order_depends_target_TP_MINIPROJ_2_PL4_G2_default_image_P7_IJ
 # Link the executable /home/bruno/Documents/IPLEIRIA/IPLeiria 2026-27/MPROC/PL/Projeto Final/Projeto-final-MICPR/TP_MINIPROJ_2_PL4_G2/out/TP_MINIPROJ_2_PL4_G2/default.elf
 
 build /home/bruno/Documents/IPLEIRIA/IPLeiria$ 2026-27/MPROC/PL/Projeto$ Final/Projeto-final-MICPR/TP_MINIPROJ_2_PL4_G2/out/TP_MINIPROJ_2_PL4_G2/default.elf: C_EXECUTABLE_LINKER__TP_MINIPROJ_2_PL4_G2_default_image_P7_IJYBW_ CMakeFiles/TP_MINIPROJ_2_PL4_G2_default_default_XC8_compile.dir/home/bruno/Documents/IPLEIRIA/IPLeiria_2026-27/MPROC/PL/Projeto_Final/Projeto-final-MICPR/TP_MINIPROJ_2_PL4_G2/main.c.p1 || TP_MINIPROJ_2_PL4_G2_default_default_XC8_compile
-  LINK_FLAGS = -Wl,-Map=mem.map -mcpu=18F45K22 -Wl,--defsym=__MPLAB_BUILD=1 -mdfp=/home/bruno/.mchp_packs/Microchip/PIC18F-K_DFP/1.17.312/xc8 -fno-short-double -fno-short-float -memi=wordwrite -O0 -maddrqual=ignore -mwarn=-3 -msummary=-psect,-class,+mem,-hex,-file -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto -Wl,--memorysummary,memoryfile.xml
+  LINK_FLAGS = -Wl,-Map=mem.map -mcpu=18F46K22 -Wl,--defsym=__MPLAB_BUILD=1 -mdfp=/home/bruno/.mchp_packs/Microchip/PIC18F-K_DFP/1.17.312/xc8 -fno-short-double -fno-short-float -memi=wordwrite -O0 -maddrqual=ignore -mwarn=-3 -msummary=-psect,-class,+mem,-hex,-file -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto -Wl,--memorysummary,memoryfile.xml
   OBJECT_DIR = CMakeFiles/TP_MINIPROJ_2_PL4_G2_default_image_P7_IJYBW.dir
   POST_BUILD = :
   PRE_LINK = :
