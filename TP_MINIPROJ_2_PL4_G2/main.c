@@ -1,8 +1,14 @@
-/**
- * @file main.c
- * @author bruno
- * @date 2026-10-08
- * @brief Main function
+/*
+ * MINIPROJ: P2
+ * TURMA: PL4
+ * GRUPO: 2
+ *
+ * NOME: Bruno Fernandes dos Santos
+ * NUMERO: 2024114032
+ *
+ // todo: UPDATE WITH REAL DETAILS 
+ * NOME: Diogo Oliveira
+ * NUMERO: 
  */
 int main(){
 
