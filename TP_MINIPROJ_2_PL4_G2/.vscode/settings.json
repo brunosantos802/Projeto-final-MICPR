@@ -1,0 +1,7 @@
+{
+    "mplab.clangd.compileCommandsDir": "${workspaceFolder}/_build/TP_MINIPROJ_2_PL4_G2/default",
+    "mplab.clangd.arguments": [
+        "--header-insertion=never"
+    ],
+    "mplab.clangd.path": "/opt/microchip/xc8/v4.00/bin/xc8-clangd"
+}

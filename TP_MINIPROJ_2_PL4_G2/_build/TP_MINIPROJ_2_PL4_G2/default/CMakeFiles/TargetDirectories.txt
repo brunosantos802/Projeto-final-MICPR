@@ -1,0 +1,4 @@
+/home/bruno/Documents/IPLEIRIA/IPLeiria 2026-27/MPROC/PL/Projeto Final/Projeto-final-MICPR/TP_MINIPROJ_2_PL4_G2/_build/TP_MINIPROJ_2_PL4_G2/default/CMakeFiles/TP_MINIPROJ_2_PL4_G2_default_default_XC8_compile.dir
+/home/bruno/Documents/IPLEIRIA/IPLeiria 2026-27/MPROC/PL/Projeto Final/Projeto-final-MICPR/TP_MINIPROJ_2_PL4_G2/_build/TP_MINIPROJ_2_PL4_G2/default/CMakeFiles/TP_MINIPROJ_2_PL4_G2_default_image_P7_IJYBW.dir
+/home/bruno/Documents/IPLEIRIA/IPLeiria 2026-27/MPROC/PL/Projeto Final/Projeto-final-MICPR/TP_MINIPROJ_2_PL4_G2/_build/TP_MINIPROJ_2_PL4_G2/default/CMakeFiles/edit_cache.dir
+/home/bruno/Documents/IPLEIRIA/IPLeiria 2026-27/MPROC/PL/Projeto Final/Projeto-final-MICPR/TP_MINIPROJ_2_PL4_G2/_build/TP_MINIPROJ_2_PL4_G2/default/CMakeFiles/rebuild_cache.dir
