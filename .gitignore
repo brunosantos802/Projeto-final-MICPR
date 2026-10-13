@@ -1,1 +1,14 @@
+# Proteus
+Project Backups/
 *.workspace
+
+# MPLAB (VS Code) generated build files, rebuilt from .vscode/*.mplab.json
+_build/
+cmake/
+.cache/
+
+# Build output: keep only the firmware images Proteus loads
+**/out/**
+!**/out/**/
+!**/out/**/*.hex
+!**/out/**/*.elf

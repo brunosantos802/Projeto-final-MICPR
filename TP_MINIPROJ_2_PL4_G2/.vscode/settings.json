@@ -3,5 +3,6 @@
     "mplab.clangd.arguments": [
         "--header-insertion=never"
     ],
-    "mplab.clangd.path": "/opt/microchip/xc8/v4.00/bin/xc8-clangd"
+    "mplab.clangd.path": "/opt/microchip/xc8/v4.00/bin/xc8-clangd",
+    "cmake.sourceDirectory": "/home/bruno/Documents/IPLEIRIA/IPLeiria 2026-27/MPROC/PL/Projeto Final/Projeto-final-MICPR/TP_MINIPROJ_2_PL4_G2/cmake/TP_MINIPROJ_2_PL4_G2/default"
 }
