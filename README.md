@@ -18,6 +18,5 @@ The PIC can't power the motor directly, so the motor is switched by an N-channel
 
 We chose low-side switching because the MOSFET's source sits at ground, so the gate voltage is measured from ground too. That means the PIC's own output can drive it directly. A high-side switch would need the gate pulled above the motor supply, which requires extra driver circuitry.
 
-The gate is driven by the PIC's output-high level. With the PIC18F46K22 running at 5 V (allowed range 2.3–5.5 V, datasheet §27.1, D001), an output pin driving high gives at least VDD − 0.7 V ≈ 4.3 V (§27.8, D161). That is enough to fully switch on a logic-level MOSFET.
 
 Source: [Elektor — High-side vs. low-side switching](https://www.elektormagazine.com/articles/high-side-low-side-switching)
