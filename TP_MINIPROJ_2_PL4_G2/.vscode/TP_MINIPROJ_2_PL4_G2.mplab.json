@@ -3,9 +3,11 @@
     "configurations": [
         {
             "name": "default",
-            "id": "conf1",
+            "id": "",
             "device": "PIC18F46K22",
             "imagePath": "./out/TP_MINIPROJ_2_PL4_G2/default.elf",
+            "toolProperties": "default-tool-base",
+            "tool": "Simulator",
             "packs": [
                 {
                     "name": "PIC18F-K_DFP",
@@ -23,6 +25,11 @@
             "type": "toolchain",
             "provider": "microchip.toolchains:xc8@4.00",
             "properties": {}
+        },
+        {
+            "name": "default-tool-base",
+            "type": "tool",
+            "properties": {}
         }
     ],
     "fileSets": [
@@ -32,7 +39,14 @@
                 {
                     "include": "**/*",
                     "exclude": "**/@(build|_build|out|cmake|.vscode)/**/*"
-                }
+                },
+                "config.mcc/mcc_generated_files/system/src/interrupt.c",
+                "config.mcc/mcc_generated_files/system/src/clock.c",
+                "config.mcc/mcc_generated_files/system/src/system.c",
+                "config.mcc/mcc_generated_files/system/src/config_bits.c",
+                "config.mcc/main.c",
+                "config.mcc/mcc_generated_files/system/src/pins.c",
+                "config.mcc/mcc_generated_files/timer/src/tmr1.c"
             ]
         }
     ]
