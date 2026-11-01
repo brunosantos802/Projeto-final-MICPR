@@ -40,7 +40,12 @@ void SYSTEM_Initialize(void)
 {
     CLOCK_Initialize();
     PIN_MANAGER_Initialize();
+    CCP5_Initialize();
     TMR1_Initialize();
+    TMR2_Initialize();
+    TMR3_Initialize();
+    ADC_Initialize();
+    EPWM1_Initialize();
     INTERRUPT_Initialize();
 }
 

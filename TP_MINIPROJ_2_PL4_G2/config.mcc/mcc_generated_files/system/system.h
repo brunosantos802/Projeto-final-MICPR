@@ -41,9 +41,14 @@
 #include <stdbool.h>
 #include "config_bits.h"
 #include "../system/pins.h"
+#include "../adc/adc.h"
+#include "../pwm/eccp1.h"
 #include "../system/interrupt.h"
 #include "../system/clock.h"
+#include "../compare/ccp5.h"
 #include "../timer/tmr1.h"
+#include "../timer/tmr2.h"
+#include "../timer/tmr3.h"
 
 /**
  * @ingroup systemdriver

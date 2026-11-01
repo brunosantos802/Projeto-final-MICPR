@@ -44,23 +44,46 @@
     EXCEED AMOUNT OF FEES, IF ANY, YOU PAID DIRECTLY TO MICROCHIP FOR 
     THIS SOFTWARE.
 */
+
+
+/*NOTES
+    PWM ECCP1 NOTES:
+        ECCP1_LoadDutyValue(0); //JUST A NOTE ON HOW TO DO THIS LATER
+        0% = 0
+        100% = 752
+
+    ADC NOTES:
+        0V = 0
+        5V = 1023
+        because the ADC varies between 0 and 3.3V
+        the variable avg_adc_reading will vary between 0 and 675 (3.3/5 * 1023 = 675)
+*/ 
+
+
 #include "mcc_generated_files/system/system.h"
+
+//GLOBAL VARIABLES
+volatile uint8_t heartbeat_counter = 0;
+volatile uint16_t avg_adc_reading = 0; //is a percentage (%)
+volatile uint16_t current = 0;
+volatile uint8_t adc_count = 0;
 
 //FUNCTIONS FOR INTERRUPTS
 void left_btn(void)
 {
     //LED1_Toggle();
-    LED3_Toggle(); //just for testing lol
+    //LED3_Toggle(); //just for testing lol
+    //same as below
 }
 
 void right_btn(void)
 {
     //LED2_Toggle();
-    LED3_Toggle(); //same as above, just for testing
+    //LED3_Toggle(); //same as above, just for testing
+    //does nothing freeing up debug led to test wether ADC updates
 }
 
-//TIMER 1, HEARTBEAT AND GLOBAL VARIABLES
-volatile uint8_t heartbeat_counter = 0;
+//TIMERS
 
 void timer_1(void)
 {
@@ -95,6 +118,53 @@ void right_button_press(void)
     }
 }
 
+//ADC FUNCTIONS
+
+void map_adc_pwm(){
+    /*
+    * map the ADC reading to the PWM duty cycle
+    * dividing by 675 gives a percentage
+    * multiplying by 752 maps it to a PWM value the ECCP1 can use
+    */
+    uint32_t pwm_pct = (((uint32_t)avg_adc_reading*100)/675) * 752;
+    /*
+    * needed the *100 to be able to make integer divison
+    * without it avg_adc_reading/675 would range between 0 and 1.
+    * as an integer, i would not get the correct result, so we make it vary as a percentage from 0-100
+    * and then later divide by 100 to get the correct value for the PWM duty cycle calculation.
+    * granted, within reason it always drops decimals so 300.9 will be 300 not 301 but it good enough
+    * the PWM duty cycle can vary between 0 and 752, so we multiply by
+    * 752 to get the correct value for the PWM duty cycle
+    */
+    uint16_t pwm = pwm_pct/100; 
+    /*
+    * Clamp pwm in case there in some random error or something weird
+    * noise shouldnt be an issue in proteus but if we ever have to test it on a board it might be needed
+    */
+    if (pwm > 752) pwm = 752; 
+    if (pwm < 0) pwm = 0;
+    /*
+    * Load the new PWM value to the ECCP1 module
+    */
+    ECCP1_LoadDutyValue(pwm); // load the new PWM value to the ECCP1 module
+}
+
+
+void get_adc_reading(void)
+{
+    adc_count++;
+    current += ADC_GetConversionResult();
+    if (adc_count >= 5) // get the ADC reading from the potentiometer
+    {
+        avg_adc_reading = current / adc_count; // calculate the average ADC reading over the last 250ms
+        current = 0;
+        adc_count = 0;
+        map_adc_pwm(); // map the ADC reading to the PWM duty cycle
+        
+    }
+    //LED3_Toggle(); // toggle the debug LED to show that the ADC reading has been updated (Debugging purposes lol)
+}
+
 /*
     Main application
 */
@@ -103,11 +173,17 @@ int main(void)
 {
     SYSTEM_Initialize();
 
-    INT0_SetInterruptHandler(left_btn);
-    INT1_SetInterruptHandler(right_btn);
-    TMR1_OverflowCallbackRegister(timer_1);
+    //Set the interrupt handlers
+    INT0_SetInterruptHandler(left_btn); //Left button interrupt handler (UP)
+    INT1_SetInterruptHandler(right_btn); //Right button interrupt handler (DOWN)
+    TMR1_OverflowCallbackRegister(timer_1); //Timer 1 interrupt handler (heartbeat)
+    ADC_SetInterruptHandler(get_adc_reading); //ADC interrupt handler (potentiometer reading)
 
+    //Individual manual configurations
     INTCON2bits.RBPU = 1; //set PORTB pull-ups to be disabled added manually as mentioned in class
+    CCPR5 = 37499; //set CCP5 compare value to 37499 for ADC reading every 50ms
+    
+ 
 
     // If using interrupts in PIC18 High/Low Priority Mode you need to enable the Global High and Low Interrupts 
     // If using interrupts in PIC Mid-Range Compatibility Mode you need to enable the Global and Peripheral Interrupts 

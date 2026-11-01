@@ -209,6 +209,26 @@
 #define RB1_BTN_SetAnalogMode()      do { ANSELBbits.ANSB1 = 1; } while(0)
 #define RB1_BTN_SetDigitalMode()     do { ANSELBbits.ANSB1 = 0; } while(0)
 
+// get/set RC2 aliases
+#define IO_RC2_TRIS                 TRISCbits.TRISC2
+#define IO_RC2_LAT                  LATCbits.LATC2
+#define IO_RC2_PORT                 PORTCbits.RC2
+#define IO_RC2_WPU                  WPUCbits.
+#define IO_RC2_OD                   ODCONCbits.
+#define IO_RC2_ANS                  ANSELCbits.ANSC2
+#define IO_RC2_SetHigh()            do { LATCbits.LATC2 = 1; } while(0)
+#define IO_RC2_SetLow()             do { LATCbits.LATC2 = 0; } while(0)
+#define IO_RC2_Toggle()             do { LATCbits.LATC2 = ~LATCbits.LATC2; } while(0)
+#define IO_RC2_GetValue()           PORTCbits.RC2
+#define IO_RC2_SetDigitalInput()    do { TRISCbits.TRISC2 = 1; } while(0)
+#define IO_RC2_SetDigitalOutput()   do { TRISCbits.TRISC2 = 0; } while(0)
+#define IO_RC2_SetPullup()          do { WPUCbits. = 1; } while(0)
+#define IO_RC2_ResetPullup()        do { WPUCbits. = 0; } while(0)
+#define IO_RC2_SetPushPull()        do { ODCONCbits. = 0; } while(0)
+#define IO_RC2_SetOpenDrain()       do { ODCONCbits. = 1; } while(0)
+#define IO_RC2_SetAnalogMode()      do { ANSELCbits.ANSC2 = 1; } while(0)
+#define IO_RC2_SetDigitalMode()     do { ANSELCbits.ANSC2 = 0; } while(0)
+
 /**
  * @ingroup  pinsdriver
  * @brief GPIO and peripheral I/O initialization
