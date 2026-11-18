@@ -51,7 +51,8 @@
                 "config.mcc/mcc_generated_files/pwm/src/eccp1.c",
                 "config.mcc/mcc_generated_files/adc/src/adc.c",
                 "config.mcc/mcc_generated_files/timer/src/tmr3.c",
-                "config.mcc/mcc_generated_files/compare/src/ccp5.c"
+                "config.mcc/mcc_generated_files/compare/src/ccp5.c",
+                "config.mcc/mcc_generated_files/uart/src/eusart1.c"
             ]
         }
     ]
