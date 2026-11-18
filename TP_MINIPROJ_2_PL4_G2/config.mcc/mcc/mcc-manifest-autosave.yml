@@ -2,15 +2,15 @@
 
 manifest_file_version: 1.0.0
 project: N/A
-creation_date: 2026-11-01T20:45:59.794Z[Europe/Lisbon]
+creation_date: 2026-11-18T11:37:38.723Z[Europe/Lisbon]
 operating_system: Linux
 mcc_mode: VSCodePlugin
 mcc_mode_version: Unknown
 device_name: PIC18F46K22
 compiler: N/A
-mcc_version: 5.7.1
-mcc_core_version: 5.9.1
-content_manager_version: 7.0.0
+mcc_version: 5.7.2
+mcc_core_version: 5.9.2
+content_manager_version: 7.0.1
 is_mcc_offline: false
 is_using_prerelease_versions: false
 mcc_content_registries: https://registry.npmjs.org/
