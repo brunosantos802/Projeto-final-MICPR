@@ -12,7 +12,7 @@
   * @version Package Version 2.1.0
 */
 /*
-ï¿½ [2026] Microchip Technology Inc. and its subsidiaries.
+© [2026] Microchip Technology Inc. and its subsidiaries.
 
     Subject to your compliance with these terms, you may use Microchip 
     software and any derivatives exclusively with Microchip products. 
@@ -76,7 +76,7 @@ void TMR5_Initialize(void)
         | (3 << _T5CON_T5CKPS_POSN)   // T5CKPS 1:8
         | (0 << _T5CON_TMR5CS_POSN)   // TMR5CS FOSC/4
         | (0 << _T5CON_T5SOSCEN_POSN)   // T5SOSCEN disabled
-        | (1 << _T5CON_T5RD16_POSN);  // T5RD16 enabled
+        | (0 << _T5CON_T5RD16_POSN);  // T5RD16 disabled
 }
 
 void TMR5_Deinitialize(void)
@@ -110,8 +110,6 @@ uint16_t TMR5_CounterGet(void)
     uint8_t counterHighByte;
     uint8_t counterLowByte;
     
-    T5CONbits.T5RD16 = 1U;
-	
     counterLowByte = TMR5L;
     counterHighByte = TMR5H;    
     counterValue = ((uint16_t)counterHighByte << 8U) | counterLowByte;
