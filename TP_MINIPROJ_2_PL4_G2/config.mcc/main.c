@@ -63,10 +63,11 @@
 #include "mcc_generated_files/system/system.h"
 
 //GLOBAL VARIABLES
-volatile uint8_t heartbeat_counter = 0;
+volatile uint8_t heartbeat_counter = 0; //counts the number of timer interrupts to toggle the heartbeat LED
 volatile uint16_t avg_adc_reading = 0; //is a percentage (%)
-volatile uint16_t current = 0;
-volatile uint8_t adc_count = 0;
+volatile uint16_t current = 0; //adds up the ADC readings over 5 interrupts to get an average
+volatile uint8_t adc_count = 0; //counts the number of ADC readings taken to get an average
+volatile bool use_potentiometer = 1; //defines wether POT controles the motor or not [is default 1]
 
 //FUNCTIONS FOR INTERRUPTS
 void left_btn(void)
@@ -92,7 +93,7 @@ void timer_1(void)
 
 void heartbeat(void)
 {
-    if (heartbeat_counter >= 10) // if its been 10 timer interrupts (500ms)
+    if (heartbeat_counter >= 5) // if its been 5 timer interrupts (500ms)
     {
         HB_LED_Toggle(); // toggle the heartbeat LED
         heartbeat_counter = 0; // reset the heartbeat counter
@@ -111,6 +112,7 @@ void left_button_press(void)
 
 void right_button_press(void)
 {
+    if(use_potentiometer) return; // if the potentiometer is not being used, do not update the PWM value from here
     if(RB1_BTN_GetValue())
         LED2_SetLow();
     else{
@@ -121,15 +123,16 @@ void right_button_press(void)
 //ADC FUNCTIONS
 
 void map_adc_pwm(){
+    if(!use_potentiometer) return; // if the potentiometer is not being used, do not update the PWM value from here
     /*
     * map the ADC reading to the PWM duty cycle
     * dividing by 675 gives a percentage
     * multiplying by 752 maps it to a PWM value the ECCP1 can use
     */
-    uint32_t pwm_pct = (((uint32_t)avg_adc_reading*100)/675) * 752;
+    uint32_t pwm_pct = (((uint32_t)avg_adc_reading*100)/1023) * 752;
     /*
     * needed the *100 to be able to make integer divison
-    * without it avg_adc_reading/675 would range between 0 and 1.
+    * without it avg_adc_reading/1023 would range between 0 and 1.
     * as an integer, i would not get the correct result, so we make it vary as a percentage from 0-100
     * and then later divide by 100 to get the correct value for the PWM duty cycle calculation.
     * granted, within reason it always drops decimals so 300.9 will be 300 not 301 but it good enough
