@@ -102,6 +102,10 @@ void __interrupt() INTERRUPT_InterruptManager (void)
         {
             TMR1_OverflowISR();
         } 
+        if(PIE5bits.TMR5IE == 1 && PIR5bits.TMR5IF == 1)
+        {
+            TMR5_OverflowISR();
+        } 
     }      
 }
 

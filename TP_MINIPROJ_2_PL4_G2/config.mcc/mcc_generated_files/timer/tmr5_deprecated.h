@@ -115,17 +115,31 @@
 #define Timer5_StartSinglePulseAcquisition TMR5_SinglePulseAcquisitionStart
 /**
  * @ingroup tmr5
- * @brief Defines the Custom Name for the \ref TMR5_OverflowStatusGet API.
- *        The TMR5_HasOverflowOccured will be deprecated in the future release. Use TMR5_OverflowStatusGet instead.
+ * @brief Defines the Custom Name for the \ref TMR5_OverflowInterruptEnable API.
+ *        The TMR5_TMRInterruptEnable will be deprecated in the future release. Use TMR5_OverflowInterruptEnable instead.
  */
 /* cppcheck-suppress misra-c2012-2.5 */
-#define TMR5_HasOverflowOccured TMR5_OverflowStatusGet
+#define TMR5_TMRInterruptEnable TMR5_OverflowInterruptEnable
 /**
  * @ingroup tmr5
- * @brief Defines the Custom Name for the \ref TMR5_OverflowStatusGet API.
- *        The Timer5_HasOverflowOccured will be deprecated in the future release. Use Timer5_OverflowStatusGet instead.
+ * @brief Defines the Custom Name for the \ref TMR5_OverflowInterruptEnable API.
+ *        The Timer5_TMRInterruptEnable will be deprecated in the future release. Use TMR5_OverflowInterruptEnable instead.
  */
 /* cppcheck-suppress misra-c2012-2.5 */
-#define Timer5_HasOverflowOccured TMR5_OverflowStatusGet
+#define Timer5_TMRInterruptEnable TMR5_OverflowInterruptEnable
+/**
+ * @ingroup tmr5
+ * @brief Defines the Custom Name for the \ref TMR5_OverflowInterruptDisable API.
+ *        The TMR5_TMRInterruptDisable will be deprecated in the future release. Use TMR5_OverflowInterruptDisable instead.
+ */
+/* cppcheck-suppress misra-c2012-2.5 */
+#define TMR5_TMRInterruptDisable TMR5_OverflowInterruptDisable
+/**
+ * @ingroup tmr5
+ * @brief Defines the Custom Name for the \ref TMR5_OverflowInterruptDisable API.
+ *        The Timer5_TMRInterruptDisable will be deprecated in the future release. Use TMR5_OverflowInterruptDisable instead.
+ */
+/* cppcheck-suppress misra-c2012-2.5 */
+#define Timer5_TMRInterruptDisable TMR5_OverflowInterruptDisable
 
 #endif // TMR5_DEPRECATED_H

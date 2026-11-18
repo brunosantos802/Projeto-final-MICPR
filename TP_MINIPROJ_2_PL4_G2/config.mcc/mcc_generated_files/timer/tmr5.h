@@ -56,7 +56,7 @@
  * @brief Defines the TMR5 prescaled frequency in hertz.
  */
  /* cppcheck-suppress misra-c2012-2.5 */
-#define TMR5_CLOCK_FREQ (3000000UL)
+#define TMR5_CLOCK_FREQ (375000UL)
 /**
  * @ingroup tmr5
  * @brief Defines the Custom Name for the \ref TMR5_Initialize API
@@ -125,22 +125,28 @@
 #define Timer5_OverflowCallbackRegister TMR5_OverflowCallbackRegister
 /**
  * @ingroup tmr5
+ * @brief Defines the Custom Name for the \ref TMR5_OverflowISR API
+ */
+ /* cppcheck-suppress misra-c2012-2.5 */
+#define Timer5_OverflowISR TMR5_OverflowISR
+/**
+ * @ingroup tmr5
  * @brief Defines the Custom Name for the \ref TMR5_Tasks API
  */
  /* cppcheck-suppress misra-c2012-2.5 */
 #define Timer5_Tasks TMR5_Tasks
-/**
- * @ingroup tmr5
- * @brief Defines the Custom Name for the \ref TMR5_OverflowStatusGet API
- */
- /* cppcheck-suppress misra-c2012-2.5 */
- #define Timer5_OverflowStatusGet TMR5_OverflowStatusGet
  /**
  * @ingroup tmr5
- * @brief Defines the Custom Name for the \ref TMR5_OverflowStatusClear API
+ * @brief Defines the Custom Name for the \ref TMR5_OverflowInterruptEnable API
  */
  /* cppcheck-suppress misra-c2012-2.5 */
-#define Timer5_OverflowStatusClear TMR5_OverflowStatusClear
+#define Timer5_OverflowInterruptEnable TMR5_OverflowInterruptEnable
+/**
+ * @ingroup tmr5
+ * @brief Defines the Custom Name for the \ref TMR5_OverflowInterruptDisable API
+ */
+ /* cppcheck-suppress misra-c2012-2.5 */
+#define Timer5_OverflowInterruptDisable TMR5_OverflowInterruptDisable
 /**
  * @ingroup tmr5
  * @brief Defines the Custom Name for the \ref TMR5_GateStateGet API.
@@ -283,20 +289,27 @@ uint8_t TMR5_GateStateGet(void);
 
 /**
  * @ingroup tmr5
- * @brief Checks for the Timer Overflow flag when in Non-Interrupt mode.
+ * @brief Enables TMR5 interrupt.
  * @param None.
- * @retval True  - Timer overflow has occurred.
- * @retval False - Timer overflow has not occurred.
+ * @return None.
  */
-bool TMR5_OverflowStatusGet(void);
+void TMR5_OverflowInterruptEnable(void);
 
 /**
  * @ingroup tmr5
- * @brief Clears the Timer Overflow flag in Non-Interrupt mode.
+ * @brief Disables  TMR5 interrupt.
  * @param None.
- * @retval None.
+ * @return None.
  */
-void TMR5_OverflowStatusClear(void);
+void TMR5_OverflowInterruptDisable(void);
+
+/**
+ * @ingroup tmr5
+ * @brief Interrupt Service Routine (ISR) for TMR5 overflow interrupt.
+ * @param None.
+ * @return None.
+ */
+void TMR5_OverflowISR(void);
 
 /**
  * @ingroup tmr5

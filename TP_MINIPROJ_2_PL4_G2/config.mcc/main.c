@@ -278,7 +278,7 @@ int main(void)
     INT1_SetInterruptHandler(right_btn); //Right button interrupt handler (DOWN)
     TMR1_OverflowCallbackRegister(timer_1); //Timer 1 interrupt handler (heartbeat)
     ADC_SetInterruptHandler(get_adc_reading); //ADC interrupt handler (potentiometer reading)
-    CCP4_SetCallBack(encoder_callback); //Every time a pulse arrives execute that function
+    ECCP2_SetCallBack(encoder_callback); //Every time a pulse arrives execute that function
     TMR5_OverflowCallbackRegister(tmr5_overflow);//SETS RPM TO ZERO IF 1/24th of a turn takes longer than roughly 174ms
     //Individual manual configurations
     INTCON2bits.RBPU = 1; //set PORTB pull-ups to be disabled added manually as mentioned in class
