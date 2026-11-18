@@ -52,78 +52,142 @@
         0% = 0
         100% = 752
 
-    ADC NOTES:
-        0V = 0
-        5V = 1023
-        because the ADC varies between 0 and 3.3V
-        the variable avg_adc_reading will vary between 0 and 675 (3.3/5 * 1023 = 675)
+    MENU: 
+        printf("\r\n1 - Inserir velocidade desejada");
+        printf("\r\n2 - Desligar o motor");
+        printf("\r\n3 - Selecionar controlo (potenciometro/botoes)");
+        printf("\r\n4 - Definir passo dos botoes (1/2/5/10 %%)");
+        printf("\r\n5 - Definir limite maximo de velocidade (50-100 %%)");
+        printf("\r\n6 - Mostrar velocidade atual");
+        printf("\r\n7 - Mostrar duty-cycle atual");
+        printf("\r\n8 - Mostrar Log de velocidade");
+        printf("\r\n9 - Mostrar valor do potenciometro");
+        printf("\r\n0 - Voltar ao Menu Principal");              
+        printf("\r\nOpcao: ");
+
 */ 
 
 
 #include "mcc_generated_files/system/system.h"
 #include <stdio.h>
 
+//DEFINES
+#define MAX_SPEED 600
+#define MAX_PWM 750 //ITS ACTUALLY 752 but were not doing all that
+#define MIN_PWM 0
+
 //GLOBAL VARIABLES
 volatile uint8_t heartbeat_counter = 0; //counts the number of timer interrupts to toggle the heartbeat LED
 volatile uint16_t avg_adc_reading = 0; //is a percentage (%)
 volatile uint16_t current = 0; //adds up the ADC readings over 5 interrupts to get an average
 volatile uint8_t adc_count = 0; //counts the number of ADC readings taken to get an average
+volatile uint16_t pwm = 0; //Stores globally what the current pwm value is
+
+//MENU FLAGS AND VARIABLES
 volatile bool use_potentiometer = 1; //defines wether POT controles the motor or not [is default 1]
+volatile uint8_t button_step = 10; //defines the current step in the button sequence [defined as 1/2/5/10 %] [DEFAULT 10]
+volatile uint8_t increase_pwm_by_step = 75; //Related to the above variable, holds the pwm value to increase by [DEFAULT 75]
+uint8_t rxData; //holds recieved data when user sends
+uint32_t velocidade = 0; //Stores current requested speed as per last button or pot change
+char menu_select = '0'; //Stores selected menu option for menu navigation
+
+
+//MENU FUNCTIONS
+void map_step(uint8_t button_step){
+    switch(button_step){
+        case 1:
+            increase_pwm_by_step = 7; //was really 7.52 but oh well
+            break;
+        case 2:
+            increase_pwm_by_step = 15; //was really 15.04
+            break;
+        case 5:
+            increase_pwm_by_step = 37; //was 37.6 
+            break;
+        case 10:
+            increase_pwm_by_step = 75; //was 75.2
+            break;
+    }
+}
+
+void update_requested_speed(void){
+    velocidade = (MAX_SPEED*pwm)/MAX_PWM;
+}
+
+void menu (void){
+ 
+}
+
+
+//END MENU FUNCTIONS
+
 
 //FUNCTIONS FOR INTERRUPTS
-void left_btn(void)
-{
-    //LED1_Toggle();
-    //LED3_Toggle(); //just for testing lol
-    //same as below
+void left_btn(void){
+    if(use_potentiometer) return; // if the potentiometer is not being used, do not update the PWM value from here
+
+    if(pwm <= MAX_PWM){ //not MAX_PWM CAUSE THATS 752, which is true but those last two will remain unused to save memory by avoiding floats when possible
+        uint16_t new_pwm = pwm;
+        new_pwm += increase_pwm_by_step;
+        if(new_pwm > MAX_PWM){new_pwm = MAX_PWM;}else if(new_pwm < MIN_PWM){new_pwm = MIN_PWM;}
+        pwm = new_pwm;
+    }
+
+    ECCP1_LoadDutyValue(pwm); // load the new PWM value to the ECCP1 module
+    update_requested_speed();
 }
 
-void right_btn(void)
-{
-    //LED2_Toggle();
-    //LED3_Toggle(); //same as above, just for testing
-    //does nothing freeing up debug led to test wether ADC updates
+void right_btn(void){
+
+    if(use_potentiometer) return; // if the potentiometer is not being used, do not update the PWM value from here
+
+    if(pwm >= increase_pwm_by_step){
+        uint16_t new_pwm = pwm;
+        new_pwm -= increase_pwm_by_step;
+        if(new_pwm < MIN_PWM){new_pwm = MIN_PWM;}else if(new_pwm > MAX_PWM){new_pwm = MAX_PWM;}
+        pwm = new_pwm;
+    }
+    ECCP1_LoadDutyValue(pwm); // load the new PWM value to the ECCP1 module
+    update_requested_speed();
 }
+//END INTERRUPT FUNCTIONS
 
 //TIMERS
-
-void timer_1(void)
-{
+void timer_1(void){
     heartbeat_counter++; // set heartbeat flag high so that the main loop can toggle the LED
 }
 
-void heartbeat(void)
-{
+void heartbeat(void){
     if (heartbeat_counter >= 5) // if its been 5 timer interrupts (500ms)
     {
         HB_LED_Toggle(); // toggle the heartbeat LED
         heartbeat_counter = 0; // reset the heartbeat counter
     }
 }
+//END TIMERS
 
 //BUTTON PRESS FUNCTIONS
-void left_button_press(void)
-{
+void button_press_feedback(void){
+    
+    //LEFT BUTTON
     if(RB0_BTN_GetValue())
         LED1_SetLow();
     else{
         LED1_SetHigh();
     }
-}
-
-void right_button_press(void)
-{
-    if(use_potentiometer) return; // if the potentiometer is not being used, do not update the PWM value from here
+    
+    //RIGHT BUTTON
     if(RB1_BTN_GetValue())
         LED2_SetLow();
     else{
         LED2_SetHigh();
     }
 }
+//END OF BUTTON PRESS FUNCTIONS
+
 
 //ADC FUNCTIONS
-
-void map_adc_pwm(){
+void map_adc_pwm(void){
     if(!use_potentiometer) return; // if the potentiometer is not being used, do not update the PWM value from here
     /*
     * map the ADC reading to the PWM duty cycle
@@ -140,19 +204,20 @@ void map_adc_pwm(){
     * the PWM duty cycle can vary between 0 and 752, so we multiply by
     * 752 to get the correct value for the PWM duty cycle
     */
-    uint16_t pwm = pwm_pct/100; 
+    //global pwm value
+    pwm = pwm_pct/100;
     /*
     * Clamp pwm in case there in some random error or something weird
     * noise shouldnt be an issue in proteus but if we ever have to test it on a board it might be needed
     */
-    if (pwm > 752) pwm = 752; 
-    if (pwm < 0) pwm = 0;
+    if (pwm > 752) pwm = MAX_PWM;
+    if (pwm < 0) pwm = MIN_PWM;
     /*
     * Load the new PWM value to the ECCP1 module
     */
     ECCP1_LoadDutyValue(pwm); // load the new PWM value to the ECCP1 module
+    update_requested_speed();
 }
-
 
 void get_adc_reading(void)
 {
@@ -168,6 +233,9 @@ void get_adc_reading(void)
     }
     //LED3_Toggle(); // toggle the debug LED to show that the ADC reading has been updated (Debugging purposes lol)
 }
+
+//END ADC FUNCTIONS
+
 
 /*
     Main application
@@ -206,11 +274,9 @@ int main(void)
 
     while(1)
     {  
-            
-        //EUSART TESTING
-        printf("DING DING DING; ENGINE CAPUT MOFO\r\n");
-        heartbeat(); // call the heartbeat function to toggle the LED if the flag is set
-        left_button_press(); // call the left button press function to check if the button is pressed
-        right_button_press(); // call the right button press function to check if the button is pressed
+        menu(); //UART MENU
+        heartbeat(); //HEARTBEAT FOR DEBUGGING
+        button_press_feedback(); //VISUAL FEEDBACK FOR BUTTON PRESSES
+
     }    
 }

@@ -309,6 +309,26 @@
 #define IO_RC7_SetAnalogMode()      do { ANSELCbits.ANSC7 = 1; } while(0)
 #define IO_RC7_SetDigitalMode()     do { ANSELCbits.ANSC7 = 0; } while(0)
 
+// get/set RD1 aliases
+#define IO_RD1_TRIS                 TRISDbits.TRISD1
+#define IO_RD1_LAT                  LATDbits.LATD1
+#define IO_RD1_PORT                 PORTDbits.RD1
+#define IO_RD1_WPU                  WPUDbits.
+#define IO_RD1_OD                   ODCONDbits.
+#define IO_RD1_ANS                  ANSELDbits.ANSD1
+#define IO_RD1_SetHigh()            do { LATDbits.LATD1 = 1; } while(0)
+#define IO_RD1_SetLow()             do { LATDbits.LATD1 = 0; } while(0)
+#define IO_RD1_Toggle()             do { LATDbits.LATD1 = ~LATDbits.LATD1; } while(0)
+#define IO_RD1_GetValue()           PORTDbits.RD1
+#define IO_RD1_SetDigitalInput()    do { TRISDbits.TRISD1 = 1; } while(0)
+#define IO_RD1_SetDigitalOutput()   do { TRISDbits.TRISD1 = 0; } while(0)
+#define IO_RD1_SetPullup()          do { WPUDbits. = 1; } while(0)
+#define IO_RD1_ResetPullup()        do { WPUDbits. = 0; } while(0)
+#define IO_RD1_SetPushPull()        do { ODCONDbits. = 0; } while(0)
+#define IO_RD1_SetOpenDrain()       do { ODCONDbits. = 1; } while(0)
+#define IO_RD1_SetAnalogMode()      do { ANSELDbits.ANSD1 = 1; } while(0)
+#define IO_RD1_SetDigitalMode()     do { ANSELDbits.ANSD1 = 0; } while(0)
+
 /**
  * @ingroup  pinsdriver
  * @brief GPIO and peripheral I/O initialization
