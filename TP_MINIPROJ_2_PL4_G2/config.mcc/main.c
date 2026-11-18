@@ -88,8 +88,10 @@ volatile bool use_potentiometer = 1; //defines wether POT controles the motor or
 volatile uint8_t button_step = 10; //defines the current step in the button sequence [defined as 1/2/5/10 %] [DEFAULT 10]
 volatile uint8_t increase_pwm_by_step = 75; //Related to the above variable, holds the pwm value to increase by [DEFAULT 75]
 uint8_t rxData; //holds recieved data when user sends
-uint32_t velocidade = 0; //Stores current requested speed as per last button or pot change
+volatile uint32_t velocidade = 0; //Stores current requested speed as per last button or pot change
 char menu_select = '0'; //Stores selected menu option for menu navigation
+volatile uint32_t encoder_time = 0; //stores the time it took inbetween last and 2nd to last rising edges from the encoder [IN TICKS]
+volatile uint16_t encoder_speed = 0; //stores measured speed from encoder [IN RPM]
 
 
 //MENU FUNCTIONS
@@ -111,7 +113,7 @@ void map_step(uint8_t button_step){
 }
 
 void update_requested_speed(void){
-    velocidade = (MAX_SPEED*pwm)/MAX_PWM;
+    velocidade = ((uint32_t)MAX_SPEED*pwm)/MAX_PWM;
 }
 
 void menu (void){
@@ -121,6 +123,22 @@ void menu (void){
 
 //END MENU FUNCTIONS
 
+//ENCODER FUNCTION
+void encoder_callback(uint16_t TimerValueUS){ //calculates the time it took since the last pulse was recieved
+    TMR5_CounterSet(0); //Restarts counter
+
+    encoder_time = TimerValueUS;
+}
+
+void compute_encoder_speed(void){
+    uint32_t time = encoder_time;
+    if(time != 0){
+        encoder_speed = 60000000UL / (time*8/3) / 24; //UL suffix tells the compiler to set it as a unsigned long (uint32_t) 
+    }else{
+        encoder_speed = 0;
+    }
+}
+//END ENCODER FUNCTION
 
 //FUNCTIONS FOR INTERRUPTS
 void left_btn(void){
@@ -146,6 +164,8 @@ void right_btn(void){
         new_pwm -= increase_pwm_by_step;
         if(new_pwm < MIN_PWM){new_pwm = MIN_PWM;}else if(new_pwm > MAX_PWM){new_pwm = MAX_PWM;}
         pwm = new_pwm;
+    }else{
+        pwm = 0;
     }
     ECCP1_LoadDutyValue(pwm); // load the new PWM value to the ECCP1 module
     update_requested_speed();
@@ -153,6 +173,7 @@ void right_btn(void){
 //END INTERRUPT FUNCTIONS
 
 //TIMERS
+//TIMER 1
 void timer_1(void){
     heartbeat_counter++; // set heartbeat flag high so that the main loop can toggle the LED
 }
@@ -164,6 +185,12 @@ void heartbeat(void){
         heartbeat_counter = 0; // reset the heartbeat counter
     }
 }
+//END TIMER 1
+//TIMER 5 - RPM TIMER
+void tmr5_overflow(void){
+    encoder_time = 0; //once compute_encoder_speed comes in it sets RPM to zero as well
+}
+//END TIMER 5
 //END TIMERS
 
 //BUTTON PRESS FUNCTIONS
@@ -194,15 +221,15 @@ void map_adc_pwm(void){
     * dividing by 675 gives a percentage
     * multiplying by 752 maps it to a PWM value the ECCP1 can use
     */
-    uint32_t pwm_pct = (((uint32_t)avg_adc_reading*100)/1023) * 752;
+    uint32_t pwm_pct = (((uint32_t)avg_adc_reading*100)/1023) * MAX_PWM;
     /*
     * needed the *100 to be able to make integer divison
     * without it avg_adc_reading/1023 would range between 0 and 1.
     * as an integer, i would not get the correct result, so we make it vary as a percentage from 0-100
     * and then later divide by 100 to get the correct value for the PWM duty cycle calculation.
     * granted, within reason it always drops decimals so 300.9 will be 300 not 301 but it good enough
-    * the PWM duty cycle can vary between 0 and 752, so we multiply by
-    * 752 to get the correct value for the PWM duty cycle
+    * the PWM duty cycle can vary between 0 and 752, we discard the last 2 to keep round numbers (avoud floats as much as possible),
+    * so we multiply by 750 to get the correct value for the PWM duty cycle
     */
     //global pwm value
     pwm = pwm_pct/100;
@@ -210,8 +237,8 @@ void map_adc_pwm(void){
     * Clamp pwm in case there in some random error or something weird
     * noise shouldnt be an issue in proteus but if we ever have to test it on a board it might be needed
     */
-    if (pwm > 752) pwm = MAX_PWM;
-    if (pwm < 0) pwm = MIN_PWM;
+    if (pwm > MAX_PWM) pwm = MAX_PWM;
+    if (pwm < MIN_PWM) pwm = MIN_PWM;
     /*
     * Load the new PWM value to the ECCP1 module
     */
@@ -237,6 +264,7 @@ void get_adc_reading(void)
 //END ADC FUNCTIONS
 
 
+
 /*
     Main application
 */
@@ -250,7 +278,8 @@ int main(void)
     INT1_SetInterruptHandler(right_btn); //Right button interrupt handler (DOWN)
     TMR1_OverflowCallbackRegister(timer_1); //Timer 1 interrupt handler (heartbeat)
     ADC_SetInterruptHandler(get_adc_reading); //ADC interrupt handler (potentiometer reading)
-
+    CCP4_SetCallBack(encoder_callback); //Every time a pulse arrives execute that function
+    TMR5_OverflowCallbackRegister(tmr5_overflow);//SETS RPM TO ZERO IF 1/24th of a turn takes longer than roughly 174ms
     //Individual manual configurations
     INTCON2bits.RBPU = 1; //set PORTB pull-ups to be disabled added manually as mentioned in class
     CCPR5 = 37499; //set CCP5 compare value to 37499 for ADC reading every 50ms
@@ -277,6 +306,8 @@ int main(void)
         menu(); //UART MENU
         heartbeat(); //HEARTBEAT FOR DEBUGGING
         button_press_feedback(); //VISUAL FEEDBACK FOR BUTTON PRESSES
-
+        compute_encoder_speed(); //UPDATES REAL RPM
+        printf("\r\nENCODER SPEED: %u", encoder_speed); //u: unsigned
+        printf("\r\nPEDIDA: %lu", velocidade);
     }    
 }

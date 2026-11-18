@@ -56,7 +56,7 @@
  * @brief Defines the TMR5 prescaled frequency in hertz.
  */
  /* cppcheck-suppress misra-c2012-2.5 */
-#define TMR5_CLOCK_FREQ (375000UL)
+#define TMR5_CLOCK_FREQ (3000000UL)
 /**
  * @ingroup tmr5
  * @brief Defines the Custom Name for the \ref TMR5_Initialize API

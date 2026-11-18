@@ -1,13 +1,13 @@
 /**
- * CCP4 Generated Driver File.
+ * ECCP2 Generated Driver File.
  * 
- * @file ccp4.c
+ * @file eccp2.c
  * 
- * @ingroup capture4
+ * @ingroup capture2
  * 
- * @brief This file contains the API implementation for the CCP4 driver.
+ * @brief This file contains the API implementation for the ECCP2 driver.
  *
- * @version CCP4 Driver Version 1.1.0
+ * @version ECCP2 Driver Version 1.0.0
 */
 /*
 © [2026] Microchip Technology Inc. and its subsidiaries.
@@ -30,79 +30,68 @@
     THIS SOFTWARE.
 */
 
- /**
-   Section: Included Files
- */
-
 #include <xc.h>
-#include "../ccp4.h"
-
-static void (*CCP4_CallBack)(uint16_t);
+#include "../eccp2.h"
 
 /**
-  Section: Capture Module APIs
-*/
+ * @ingroup capture2
+ * @brief Declares the function pointer for the callback API.
+ */
+static void (*ECCP2_CallBack)(uint16_t);
 
 /**
- * @ingroup capture4
+ * @ingroup capture2
  * @brief Default callback function for the capture interrupt events.
- * @param capturedValue - 16-bit captured value.
+ * @param capturedValue - 16-bit captured value
  * @return None.
  */
-static void CCP4_DefaultCallBack(uint16_t capturedValue) {
+static void ECCP2_DefaultCallBack(uint16_t capturedValue) {
     // Add your code here
 }
 
-void CCP4_Initialize(void)
+void ECCP2_Initialize(void)
 {
-    // Set the CCP4 to the options selected in the User Interface
+    // Set the ECCP2 to the options selected in the User Interface
     
-    // CCPM Rising edge; DCB 0; 
-    CCP4CON = 0x5;
+    // CCPM Every rising edge; DCB 0; PM single; 
+    CCP2CON = 0x5;
     
     // CCPRH 0; 
-    CCPR4H = 0x0;
+    CCPR2H = 0x0;
     
     // CCPRL 0; 
-    CCPR4L = 0x0;
+    CCPR2L = 0x0;
     
-    // Set the default call back function for CCP4
-    CCP4_SetCallBack(CCP4_DefaultCallBack);
-     
-    // Selecting Timer 5
-    CCPTMRS1bits.C4TSEL = 0x2; 
+    // Set the default call back function for ECCP2
+    ECCP2_SetCallBack(ECCP2_DefaultCallBack);
 
-    // Clear the CCP4 interrupt flag    
-    PIR4bits.CCP4IF = 0;    
+    // Selecting Timer 5
+    CCPTMRS0bits.C2TSEL = 0x2; 
+
+    // Clear the ECCP2 interrupt flag    
+    PIR2bits.CCP2IF = 0;
     
-    // Enable the CCP4 interrupt
-    PIE4bits.CCP4IE = 1;
+    // Enable the ECCP2 interrupt
+    PIE2bits.CCP2IE = 1;
 }
 
-
-/**
- * @ingroup capture4
- * @brief Implements the ISR for capture interrupt when vectored interrupt is enabled.
- * @param None.
- * @return None.
- */
-void CCP4_CaptureISR(void)
+void ECCP2_CaptureISR(void)
 {
-    CCPR4_PERIOD_REG_T module;
+    CCPR2_PERIOD_REG_T module;
 
-    // Clear the CCP4 interrupt flag
-    PIR4bits.CCP4IF = 0;
+    // Clear the ECCP2 interrupt flag
+    PIR2bits.CCP2IF = 0;
     
     // Copy captured value.
-    module.ccpr4l = CCPR4L;
-    module.ccpr4h = CCPR4H;
+    module.ccpr2l = CCPR2L;
+    module.ccpr2h = CCPR2H;
     
     // Return 16-bit captured value
-    CCP4_CallBack(module.ccpr4_16Bit);
+    ECCP2_CallBack(module.ccpr2_16Bit);
 }
 
-void CCP4_SetCallBack(void (*customCallBack)(uint16_t)){
-    CCP4_CallBack = customCallBack;
+void ECCP2_SetCallBack(void (*customCallBack)(uint16_t)){
+    ECCP2_CallBack = customCallBack;
 }
 /**
  End of File

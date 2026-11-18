@@ -12,7 +12,7 @@
   * @version Package Version 2.1.0
 */
 /*
-© [2026] Microchip Technology Inc. and its subsidiaries.
+ï¿½ [2026] Microchip Technology Inc. and its subsidiaries.
 
     Subject to your compliance with these terms, you may use Microchip 
     software and any derivatives exclusively with Microchip products. 
@@ -68,9 +68,8 @@ void TMR5_Initialize(void)
     TMR5_OverflowCallback =TMR5_DefaultOverflowCallback;
     TMR5_GateCallback = TMR5_DefaultGateCallback;
 
-    // Clear interrupt flags
 	PIR5bits.TMR5IF = 0U;
-	PIR3bits.TMR5GIF = 0U;
+	PIE5bits.TMR5IE = 1U;
     
     T5CON = (1 << _T5CON_TMR5ON_POSN)   // TMR5ON enabled
         | (1 << _T5CON_T5SYNC_POSN)   // T5SYNC do_not_synchronize
@@ -172,16 +171,6 @@ uint8_t TMR5_GateStateGet(void)
     return (T5GCONbits.T5GVAL);
 }
 
-bool TMR5_OverflowStatusGet(void)
-{
-    return(PIR5bits.TMR5IF);
-}
-
-void TMR5_OverflowStatusClear(void)
-{
-    PIR5bits.TMR5IF = 0U;
-}
-
 bool TMR5_GateEventStatusGet(void)
 {
     return(PIR3bits.TMR5GIF);
@@ -194,16 +183,6 @@ void TMR5_GateEventStatusClear(void)
 
 void TMR5_Tasks(void)
 {
-    if(1U == PIR5bits.TMR5IF)
-    {
-        /* cppcheck-suppress misra-c2012-8.7 */
-        TMR5_CounterSet(timer5ReloadVal);
-        if(NULL != TMR5_OverflowCallback)
-        { 
-            TMR5_OverflowCallback();
-        }
-        PIR5bits.TMR5IF = 0;
-    }
     if(1U == PIR3bits.TMR5GIF)
     {
          if(NULL != TMR5_GateCallback)
@@ -214,6 +193,28 @@ void TMR5_Tasks(void)
     }
 }
 
+void TMR5_OverflowInterruptEnable(void)
+{
+    PIE5bits.TMR5IE = 1U;
+}
+
+void TMR5_OverflowInterruptDisable(void)
+{
+    PIE5bits.TMR5IE = 0U;
+}
+
+void TMR5_OverflowISR(void)
+{
+    /* cppcheck-suppress misra-c2012-8.7 */
+    TMR5_CounterSet(timer5ReloadVal);
+
+    if(NULL != TMR5_OverflowCallback)
+    {
+		TMR5_OverflowCallback();
+    }
+	
+	PIR5bits.TMR5IF = 0U;
+}
 
 void TMR5_OverflowCallbackRegister(void (* CallbackHandler)(void))
 {

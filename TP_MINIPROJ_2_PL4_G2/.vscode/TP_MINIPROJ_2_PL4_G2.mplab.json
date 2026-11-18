@@ -54,7 +54,7 @@
                 "config.mcc/mcc_generated_files/compare/src/ccp5.c",
                 "config.mcc/mcc_generated_files/uart/src/eusart1.c",
                 "config.mcc/mcc_generated_files/timer/src/tmr5.c",
-                "config.mcc/mcc_generated_files/capture/src/ccp4.c"
+                "config.mcc/mcc_generated_files/capture/src/eccp2.c"
             ]
         }
     ]

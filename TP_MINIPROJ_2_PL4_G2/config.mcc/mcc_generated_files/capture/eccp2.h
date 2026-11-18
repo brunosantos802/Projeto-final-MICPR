@@ -1,13 +1,13 @@
 /**
- * CCP4 Generated Driver API Header File.
+ * ECCP2 Generated Driver API Header File.
  * 
- * @file ccp4.h
+ * @file eccp2.h
  * 
- * @defgroup capture4 CAPTURE4
+ * @defgroup capture2 CAPTURE2
  * 
- * @brief This file contains the API prototypes and other data types for the CCP4 module.
+ * @brief This file contains the API prototypes and other data types for the ECCP2 module.
  *
- * @version CCP4 Driver Version 1.1.0
+ * @version ECCP2 Driver Version 1.0.0
 */
 /*
 © [2026] Microchip Technology Inc. and its subsidiaries.
@@ -30,70 +30,57 @@
     THIS SOFTWARE.
 */
 
-#ifndef CCP4_H
-#define CCP4_H
-
- /**
-   Section: Included Files
- */
+#ifndef ECCP2_H
+#define ECCP2_H
 
 #include <xc.h>
 #include <stdint.h>
 #include <stdbool.h>
 
 
-/** 
-   Section: Data Type Definition
-*/
-
 /**
- * @ingroup capture4
- * @union CCPR4_PERIOD_REG_T
- * @brief Custom data type to hold the low byte, high byte, and 16-bit values of the period register.
+ * @ingroup capture2
+ * @union CCPR2_PERIOD_REG_T
+ * @brief Custom data type to hold the low byte, high byte and 16-bit values of the Period register.
  */
-typedef union CCPR4Reg_tag
+typedef union CCPR2Reg_tag
 {
    struct
    {
-      uint8_t ccpr4l; /**< CCPR4L low byte.*/
-      uint8_t ccpr4h; /**< CCPR4H high byte.*/
+      uint8_t ccpr2l; /**< CCPR2L low byte.*/
+      uint8_t ccpr2h; /**< CCPR2H high byte.*/
    };
    struct
    {
-      uint16_t ccpr4_16Bit; /**< CCPR4 16-bit.*/
+      uint16_t ccpr2_16Bit; /**< CCPR2 16-bit.*/
    };
-} CCPR4_PERIOD_REG_T ;
+} CCPR2_PERIOD_REG_T ;
 
 /**
-  Section: CCP4 Capture Module APIs
-*/
-
-/**
- * @ingroup capture4
- * @brief Initializes the CCP4 module. This is called only once before calling other CCP4 APIs.
+ * @ingroup capture2
+ * @brief Initializes the ECCP2 module. This is called only once before calling other ECCP2 APIs.
  * @param None.
  * @return None.
  */
-void CCP4_Initialize(void);
+void ECCP2_Initialize(void);
 
 /**
- * @ingroup capture4
+ * @ingroup capture2
  * @brief Implements the Interrupt Service Routine (ISR) for the capture interrupt.
  * @param None.
  * @return None.
  */
-void CCP4_CaptureISR(void);
+void ECCP2_CaptureISR(void);
 
 /**
- * @ingroup capture4
+ * @ingroup capture2
  * @brief Assigns a callback function that will be called from the Capture ISR when a capture interrupt event occurs.
- * @param (*customCallBack)(uint16_t) - Function pointer to the new callback.
+ * @param (*customCallBack)(uint16_t) - Function pointer to the new callback
  * @return None.
  */
-void CCP4_SetCallBack(void (*customCallBack)(uint16_t));
+void ECCP2_SetCallBack(void (*customCallBack)(uint16_t));
 
-
-#endif // CCP4_H
+#endif // ECCP2_H
 /**
  End of File
 */

@@ -90,6 +90,10 @@ void __interrupt() INTERRUPT_InterruptManager (void)
     }
     if(INTCONbits.PEIE == 1)
     {
+        if(PIE2bits.CCP2IE == 1 && PIR2bits.CCP2IF == 1)
+        {
+            ECCP2_CaptureISR();
+        } 
         if(PIE1bits.ADIE == 1 && PIR1bits.ADIF == 1)
         {
             ADC_ISR();

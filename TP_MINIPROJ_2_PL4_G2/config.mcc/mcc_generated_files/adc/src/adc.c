@@ -54,8 +54,8 @@ static void ADC_DefaultInterruptHandler(void);
 
 void ADC_Initialize(void)
 {
-    // ADPREF VDD; ADNREF VSS; TRIGSEL CCP5; 
-    ADCON1 = 0x0;
+    // ADPREF external; ADNREF external; TRIGSEL CCP5; 
+    ADCON1 = 0x5;
 
     // ADCS FOSC/16; ACQT 6; ADFM right; 
     ADCON2 = 0x9D;
