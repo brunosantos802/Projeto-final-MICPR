@@ -52,18 +52,8 @@
         0% = 0
         100% = 752
 
-    MENU: 
-        printf("\r\n1 - Inserir velocidade desejada");
-        printf("\r\n2 - Desligar o motor");
-        printf("\r\n3 - Selecionar controlo (potenciometro/botoes)");
-        printf("\r\n4 - Definir passo dos botoes (1/2/5/10 %%)");
-        printf("\r\n5 - Definir limite maximo de velocidade (50-100 %%)");
-        printf("\r\n6 - Mostrar velocidade atual");
-        printf("\r\n7 - Mostrar duty-cycle atual");
-        printf("\r\n8 - Mostrar Log de velocidade");
-        printf("\r\n9 - Mostrar valor do potenciometro");
-        printf("\r\n0 - Voltar ao Menu Principal");              
-        printf("\r\nOpcao: ");
+
+
 
 */ 
 
@@ -92,7 +82,7 @@ volatile uint32_t velocidade = 0; //Stores current requested speed as per last b
 char menu_select = '0'; //Stores selected menu option for menu navigation
 volatile uint32_t encoder_time = 0; //stores the time it took inbetween last and 2nd to last rising edges from the encoder [IN TICKS]
 volatile uint16_t encoder_speed = 0; //stores measured speed from encoder [IN RPM]
-
+volatile uint16_t max_pwm = MAX_PWM; //speed limit to be set through menu 
 
 //MENU FUNCTIONS
 void map_step(uint8_t button_step){
@@ -116,8 +106,99 @@ void update_requested_speed(void){
     velocidade = ((uint32_t)MAX_SPEED*pwm)/MAX_PWM;
 }
 
+void display_main_menu(void){
+    printf("\r\nMenu Inicial:");
+    printf("\r\n");
+    printf("\r\n1 - Desligar o motor");
+    printf("\r\n2 - Selecionar controlo (potenciometro/botoes)");
+    printf("\r\n3 - Definir passo dos botoes (1/2/5/10 %%)");
+    printf("\r\n4 - Definir limite maximo de velocidade (50-100 %%)");
+    printf("\r\n5 - Mostrar velocidade atual");
+    printf("\r\n6 - Mostrar duty-cycle atual");
+    printf("\r\n7 - Mostrar Log de velocidade");
+}
+
+void cursor(void){
+    printf("\r\n");
+    printf("\r\n0 - Voltar ao Menu Inicial");
+    printf("\r\n> ");
+}
+
 void menu (void){
- 
+    if (EUSART1_IsRxReady()){
+        menu_select = EUSART1_Read();
+        EUSART1_Write(menu_select);
+        
+        switch (menu_select){
+            case '0':
+                EUSART1_Write(12);// clear the terminal
+                display_main_menu();
+                cursor();
+                break;
+            case '1':
+                EUSART1_Write(12);
+                printf("\r\nDESLIGAR O MOTOR:");
+                printf("\r\n");
+                printf("\r\nNOT IMPLEMENTED: MUST ADD LOGIC TO CHECK FOR CHANGE IN VARIABLES KEEPING ADC AND BUTTONS");
+                cursor();
+                break;
+            case '2':
+                EUSART1_Write(12);
+                printf("\r\nMETODO DE CONTROLO:");
+                printf("\r\n");
+                printf("\r\nSelecione o metodo de controlo pretendido:");
+                printf("\r\n1 - potenciometro");
+                printf("\r\n2 - botoes");
+                cursor();
+                break;
+            case '3':
+                EUSART1_Write(12);
+                printf("\r\nPASSO DOS BOTOES:");
+                printf("\r\n");
+                printf("\r\nSelecione o passo:");
+                printf("\r\n1 - 1 %%");
+                printf("\r\n2 - 2 %%");
+                printf("\r\n3 - 5 %%");
+                printf("\r\n4 - 10 %%");
+                cursor();
+                break;
+            case '4':
+                EUSART1_Write(12);
+                printf("\r\nLIMITE VELOCIDADE:");
+                printf("\r\n");
+                printf("\r\nIntroduza um valor entre 50-100%%:");
+                cursor();
+                break;
+            case '5':
+                EUSART1_Write(12);
+                printf("\r\nVELOCIDADE ATUAL:");
+                printf("\r\n");
+                printf("\r\nVelocidade: %u RPM", encoder_speed);
+                cursor();
+                break;
+            case '6':
+                EUSART1_Write(12);
+                printf("\r\nDUTY CYCLE ATUAL:");
+                printf("\r\n");
+                float pct = (float)pwm/MAX_PWM;
+                printf("\r\nDuty: %u %%", pct);
+                cursor();
+                break;
+            case '7':
+                EUSART1_Write(12);
+                printf("\r\nEEPROM LOGS:");
+                printf("\r\n");
+                printf("\r\nNOT IMPLEMENTED YET");
+                cursor();
+                break;
+            default:
+                EUSART1_Write(12);
+                printf("\r\nOpcao Invalida!");
+                cursor();
+                break;
+        }
+   
+    }
 }
 
 
@@ -144,10 +225,10 @@ void compute_encoder_speed(void){
 void left_btn(void){
     if(use_potentiometer) return; // if the potentiometer is not being used, do not update the PWM value from here
 
-    if(pwm <= MAX_PWM){ //not MAX_PWM CAUSE THATS 752, which is true but those last two will remain unused to save memory by avoiding floats when possible
+    if(pwm <= max_pwm){ 
         uint16_t new_pwm = pwm;
         new_pwm += increase_pwm_by_step;
-        if(new_pwm > MAX_PWM){new_pwm = MAX_PWM;}else if(new_pwm < MIN_PWM){new_pwm = MIN_PWM;}
+        if(new_pwm > max_pwm){new_pwm = max_pwm;}else if(new_pwm < MIN_PWM){new_pwm = MIN_PWM;}
         pwm = new_pwm;
     }
 
@@ -162,7 +243,7 @@ void right_btn(void){
     if(pwm >= increase_pwm_by_step){
         uint16_t new_pwm = pwm;
         new_pwm -= increase_pwm_by_step;
-        if(new_pwm < MIN_PWM){new_pwm = MIN_PWM;}else if(new_pwm > MAX_PWM){new_pwm = MAX_PWM;}
+        if(new_pwm < MIN_PWM){new_pwm = MIN_PWM;}else if(new_pwm > max_pwm){new_pwm = max_pwm;}
         pwm = new_pwm;
     }else{
         pwm = 0;
@@ -237,7 +318,7 @@ void map_adc_pwm(void){
     * Clamp pwm in case there in some random error or something weird
     * noise shouldnt be an issue in proteus but if we ever have to test it on a board it might be needed
     */
-    if (pwm > MAX_PWM) pwm = MAX_PWM;
+    if (pwm > max_pwm) pwm = max_pwm;
     if (pwm < MIN_PWM) pwm = MIN_PWM;
     /*
     * Load the new PWM value to the ECCP1 module
@@ -300,14 +381,14 @@ int main(void)
     // Disable the Peripheral Interrupts 
     //INTERRUPT_PeripheralInterruptDisable(); 
 
-
+    //UART MENU
+    display_main_menu();
+    cursor();
     while(1)
     {  
         menu(); //UART MENU
         heartbeat(); //HEARTBEAT FOR DEBUGGING
         button_press_feedback(); //VISUAL FEEDBACK FOR BUTTON PRESSES
         compute_encoder_speed(); //UPDATES REAL RPM
-        printf("\r\nENCODER SPEED: %u", encoder_speed); //u: unsigned
-        printf("\r\nPEDIDA: %lu", velocidade);
     }    
 }
