@@ -43,6 +43,7 @@
 #include "../system/pins.h"
 #include "../adc/adc.h"
 #include "../pwm/eccp1.h"
+#include "../uart/eusart1.h"
 #include "../system/interrupt.h"
 #include "../system/clock.h"
 #include "../compare/ccp5.h"

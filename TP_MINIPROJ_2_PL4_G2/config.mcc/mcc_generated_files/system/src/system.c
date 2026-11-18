@@ -46,6 +46,7 @@ void SYSTEM_Initialize(void)
     TMR3_Initialize();
     ADC_Initialize();
     EPWM1_Initialize();
+    EUSART1_Initialize();
     INTERRUPT_Initialize();
 }
 

@@ -61,6 +61,7 @@
 
 
 #include "mcc_generated_files/system/system.h"
+#include <stdio.h>
 
 //GLOBAL VARIABLES
 volatile uint8_t heartbeat_counter = 0; //counts the number of timer interrupts to toggle the heartbeat LED
@@ -185,8 +186,6 @@ int main(void)
     //Individual manual configurations
     INTCON2bits.RBPU = 1; //set PORTB pull-ups to be disabled added manually as mentioned in class
     CCPR5 = 37499; //set CCP5 compare value to 37499 for ADC reading every 50ms
-    
- 
 
     // If using interrupts in PIC18 High/Low Priority Mode you need to enable the Global High and Low Interrupts 
     // If using interrupts in PIC Mid-Range Compatibility Mode you need to enable the Global and Peripheral Interrupts 
@@ -207,6 +206,9 @@ int main(void)
 
     while(1)
     {  
+            
+        //EUSART TESTING
+        printf("DING DING DING; ENGINE CAPUT MOFO\r\n");
         heartbeat(); // call the heartbeat function to toggle the LED if the flag is set
         left_button_press(); // call the left button press function to check if the button is pressed
         right_button_press(); // call the right button press function to check if the button is pressed
